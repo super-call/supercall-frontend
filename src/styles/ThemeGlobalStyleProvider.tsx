@@ -1,6 +1,7 @@
 import React from "react";
-import theme from "./theme";
+import theme, { antdThemeConfig } from "./theme";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
+import { ConfigProvider } from "antd";
 
 const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
@@ -25,8 +26,10 @@ export default function ThemeGlobalStyleProvider({
 }) {
   return (
     <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      {children}
+      <ConfigProvider theme={antdThemeConfig}>
+        <GlobalStyle />
+        {children}
+      </ConfigProvider>
     </ThemeProvider>
   );
 }

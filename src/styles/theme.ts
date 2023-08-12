@@ -1,6 +1,9 @@
+import { ThemeConfig } from "antd";
+
 const theme = {
   colors: {
     primary: "#F77A88",
+    black: "#000000",
   },
   typography: {
     fontFamily: "Arial, sans-serif",
@@ -9,6 +12,13 @@ const theme = {
       medium: "16px",
       large: "20px",
     },
+  },
+};
+
+export const antdThemeConfig: ThemeConfig = {
+  token: {
+    fontSize: +theme.typography.fontSize.medium.replace("px", ""),
+    colorPrimary: theme.colors.primary,
   },
 };
 
