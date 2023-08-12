@@ -1,9 +1,14 @@
 import React from "react";
 import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import {
+  getDefaultWallets,
+  lightTheme,
+  RainbowKitProvider,
+} from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { goerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
+import theme from "@/styles/theme";
 
 const { chains, publicClient } = configureChains([goerli], [publicProvider()]);
 
@@ -26,7 +31,14 @@ export default function WagmiRainbowKitProvider({
 }) {
   return (
     <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
+      <RainbowKitProvider
+        theme={lightTheme({
+          accentColor: theme.colors.primary,
+        })}
+        chains={chains}
+      >
+        {children}
+      </RainbowKitProvider>
     </WagmiConfig>
   );
 }

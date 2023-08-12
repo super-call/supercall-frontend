@@ -1,7 +1,6 @@
 const theme = {
   colors: {
-    primary: "tomato",
-    secondary: "aqua",
+    primary: "#F77A88",
   },
   typography: {
     fontFamily: "Arial, sans-serif",
