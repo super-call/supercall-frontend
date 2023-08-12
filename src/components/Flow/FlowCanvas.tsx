@@ -10,6 +10,7 @@ import ReactFlow, {
   BackgroundVariant,
 } from "reactflow";
 import { StyledFlowCanvas } from "./StyledFlowCanvas";
+import Toolbar from "../Toolbar/Toolbar";
 
 export default function FlowCanvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -32,6 +33,7 @@ export default function FlowCanvas() {
         <MiniMap pannable />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
+      <Toolbar />
     </StyledFlowCanvas>
   );
 }
