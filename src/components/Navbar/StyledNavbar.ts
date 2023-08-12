@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const StyledNavbar = styled.div`
+  user-select: none;
   z-index: 10;
   width: 100%;
   position: absolute;
