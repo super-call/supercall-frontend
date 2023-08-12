@@ -6,11 +6,14 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { goerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import theme from "@/styles/theme";
+import { getSupportedChainConfigs } from "@/constants/chainList";
 
-const { chains, publicClient } = configureChains([goerli], [publicProvider()]);
+const { chains, publicClient } = configureChains(
+  [...getSupportedChainConfigs()],
+  [publicProvider()]
+);
 
 const { connectors } = getDefaultWallets({
   appName: "SuperCall",
