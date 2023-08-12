@@ -1,4 +1,4 @@
-import { lzSuperCallABI } from "@/abi/lzSuperCallABI";
+import { lzSuperCallABI } from "@/constants/abi/lzSuperCallABI";
 import { addressList } from "./addressList";
 
 export const lzSuperCallContract = (
