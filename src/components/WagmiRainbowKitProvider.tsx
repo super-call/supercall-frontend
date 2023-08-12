@@ -37,6 +37,7 @@ export default function WagmiRainbowKitProvider({
       <RainbowKitProvider
         theme={lightTheme({
           accentColor: theme.colors.primary,
+          borderRadius: "medium",
         })}
         chains={chains}
       >

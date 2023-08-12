@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import "reactflow/dist/style.css";
 import ReactFlow, {
   useNodesState,
@@ -31,7 +31,7 @@ export default function FlowCanvas() {
       >
         <Controls />
         <MiniMap pannable />
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+        <Background variant={BackgroundVariant.Lines} gap={40} />
       </ReactFlow>
       <Toolbar />
     </StyledFlowCanvas>

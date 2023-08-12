@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 
 export const StyledToolbarItem = styled.div<Partial<IToolbarItem>>`
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  opacity: 0.9;
   background-color: ${({ color }) => color};
   border-radius: 0.5rem;
   color: #f5f5f5;
@@ -14,6 +14,9 @@ export const StyledToolbarItem = styled.div<Partial<IToolbarItem>>`
   width: 55px;
   transition: all 0.3s ease-in-out;
   &:hover {
-    opacity: 0.8;
+    opacity: ${({ disabled }) => (disabled ? "0.7" : "1")};
+  }
+  & > * {
+    font-size: 2rem;
   }
 `;
