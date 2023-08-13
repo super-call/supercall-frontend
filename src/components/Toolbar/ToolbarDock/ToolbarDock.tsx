@@ -4,6 +4,7 @@ import NoSsr from "../../NoSsr";
 import ImportABITool from "../ImportABITool/ImportABITool";
 import CallTool from "../CallTool";
 import ShareTool from "../ShareTool";
+import HistoryTool from "../HistoryTool";
 
 export default function ToolbarDock() {
   return (
@@ -12,6 +13,7 @@ export default function ToolbarDock() {
         <CallTool />
         <ImportABITool />
         <ShareTool />
+        <HistoryTool />
       </StyledToolbarDock>
     </NoSsr>
   );
