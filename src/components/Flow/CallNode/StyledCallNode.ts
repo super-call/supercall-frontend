@@ -7,7 +7,6 @@ export const StyledCallNode = styled.div`
   color: #000;
   padding: 10px;
   width: 200px;
-  height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
