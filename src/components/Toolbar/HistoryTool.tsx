@@ -17,6 +17,10 @@ const covalentChainName = (chainID: number) => {
       return "fantom-testnet"; // fantom
     case 10102:
       return "bsc-testnet"; // bsc
+    case 10160:
+      return "base-testnet"; // base
+    case 10132:
+      return "optimism-goerli"; // op goerli
     default:
       return "";
   }
@@ -37,6 +41,10 @@ const chainName = (chainID: number) => {
       return "Fantom Testnet"; // fantom
     case 10102:
       return "BSC Testnet"; // bsc
+    case 10160:
+      return "Base Testnet"; // base
+    case 10132:
+      return "Optimism Goerli Testnet"; // op goerli
     default:
       return "";
   }
@@ -77,7 +85,7 @@ export default function HistoryTool() {
     const client = createClient("testnet");
 
     if (txHash.length <= 0) {
-      console.error('transaction hash is empty');
+      console.error("transaction hash is empty");
       return;
     }
 
