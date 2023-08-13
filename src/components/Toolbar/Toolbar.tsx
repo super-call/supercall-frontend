@@ -1,6 +1,6 @@
 import React from "react";
 import { StyledToolbar } from "./StyledToolbar";
-import ToolbarItem from "./ToolbarItem";
+import ToolbarItem from "../ToolbarItem/ToolbarItem";
 import {
   PlayCircleOutlined,
   ShareAltOutlined,
