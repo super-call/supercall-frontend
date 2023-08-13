@@ -10,8 +10,8 @@ import ReactFlow, {
   BackgroundVariant,
 } from "reactflow";
 import { StyledFlowCanvas } from "./StyledFlowCanvas";
-import ToolbarDock from "../Toolbar/ToolbarDock/ToolbarDock";
-import { StartNode } from "../FlowNodes/StartNode/StartNode";
+import ToolbarDock from "../../Toolbar/ToolbarDock/ToolbarDock";
+import { StartNode } from "../StartNode/StartNode";
 
 export default function FlowCanvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState([
