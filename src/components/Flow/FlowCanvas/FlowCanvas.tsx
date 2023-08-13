@@ -9,17 +9,20 @@ import ReactFlow, {
   Background,
   BackgroundVariant,
   useReactFlow,
-  ReactFlowProvider,
 } from "reactflow";
 import { StyledFlowCanvas } from "./StyledFlowCanvas";
 import ToolbarDock from "../../Toolbar/ToolbarDock/ToolbarDock";
 import { StartNode } from "../StartNode/StartNode";
 import { CallNode } from "../CallNode/CallNode";
+import { useDispatch } from "react-redux";
+import { setNodeEdges } from "../nodeDataSlice";
 
 let id = 1;
 const getId = () => `${id++}`;
 
 export default function FlowCanvas() {
+  const dispatch = useDispatch();
+
   const [nodes, setNodes, onNodesChange] = useNodesState([
     {
       id: `0`,
@@ -68,7 +71,7 @@ export default function FlowCanvas() {
               y: event.clientY - top,
             }),
             data: {
-              text: "Call",
+              text: id,
             },
           })
         );
@@ -80,6 +83,8 @@ export default function FlowCanvas() {
             target: id,
           } as any)
         );
+
+        dispatch(setNodeEdges(edges as any));
       }
     },
     [project, setEdges, setNodes]
