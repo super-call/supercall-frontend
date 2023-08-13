@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import ToolbarItem from "./ToolbarItem/ToolbarItem";
 import theme from "@/styles/theme";
 import { HistoryOutlined } from "@ant-design/icons";
-import { Button, Card, Modal, Space } from "antd";
-import { fromHex } from 'viem'
+import { Button, Card, Input, Modal, Space } from "antd";
+import { fromHex } from "viem";
 
 import { createClient } from "@layerzerolabs/scan-client";
 
@@ -21,6 +21,11 @@ const covalentChainName = (chainID: number) => {
       return "";
   }
 };
+function isTransactionHash(str: string) {
+  // Ethereum transaction hash should be a 64-character hexadecimal string
+  const transactionHashRegex = /^[0-9a-fA-F]{64}$/;
+  return transactionHashRegex.test(str);
+}
 
 const chainName = (chainID: number) => {
   switch (chainID) {
@@ -58,19 +63,25 @@ function Box({ detail }: any) {
 
 export default function HistoryTool() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [txHash, setTxHash] = useState(
+    "0x90b00331f0b44f4cf89cb3de911c267fe8945050d3bd260d0815f0575d3b5b1d"
+  );
 
   const [log, setLog] = useState<any>([]);
 
   useEffect(() => {
-    fetchingResult();
+    fetchingResult(txHash);
   }, []);
 
-  const fetchingResult = async () => {
+  const fetchingResult = async (txHash: string) => {
     const client = createClient("testnet");
 
-    const { messages } = await client.getMessagesBySrcTxHash(
-      "0x90b00331f0b44f4cf89cb3de911c267fe8945050d3bd260d0815f0575d3b5b1d"
-    );
+    if (txHash.length <= 0) {
+      console.error('transaction hash is empty');
+      return;
+    }
+
+    const { messages } = await client.getMessagesBySrcTxHash(txHash);
 
     const results = await Promise.all(
       messages.map(async (message) => {
@@ -81,12 +92,18 @@ export default function HistoryTool() {
         }/?`;
 
         let headers = new Headers();
-        headers.set("Authorization", `Bearer ${process.env.NEXT_PUBLIC_COVALENT_KEY}`);
+        headers.set(
+          "Authorization",
+          `Bearer ${process.env.NEXT_PUBLIC_COVALENT_KEY}`
+        );
 
         const res = await fetch(url, { method: "GET", headers: headers });
         const { data } = await res.json();
         console.log(data.items[0].log_events[0]);
-        const logging = fromHex(data.items[0].log_events[0].raw_log_data, 'string');
+        const logging = fromHex(
+          data.items[0].log_events[0].raw_log_data,
+          "string"
+        );
 
         return {
           ...message,
@@ -128,17 +145,18 @@ export default function HistoryTool() {
         onCancel={handleCancel}
       >
         <Space direction="vertical" style={{ width: "100%" }}>
+          <Input value={txHash} onChange={(e) => setTxHash(e.target.value)} />
+          <Button
+            style={{ width: "100%", backgroundColor: theme.colors.black }}
+            type="primary"
+            onClick={() => fetchingResult(txHash)}
+          >
+            search
+          </Button>
           {log.length > 0 &&
             log.map((detail: any, key: number) => (
               <Box key={key} detail={detail} />
             ))}
-          <Button
-            style={{ width: "100%", backgroundColor: theme.colors.black }}
-            type="primary"
-            onClick={fetchingResult}
-          >
-            refresh
-          </Button>
           <Button
             style={{ width: "100%", backgroundColor: theme.colors.black }}
             type="primary"
