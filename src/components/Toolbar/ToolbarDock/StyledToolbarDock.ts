@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const StyledToolbar = styled.div`
+export const StyledToolbarDock = styled.div`
   display: flex;
   & > * + * {
     margin-left: 10px;

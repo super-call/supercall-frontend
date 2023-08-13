@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import "reactflow/dist/style.css";
 import ReactFlow, {
   useNodesState,
@@ -10,15 +10,31 @@ import ReactFlow, {
   BackgroundVariant,
 } from "reactflow";
 import { StyledFlowCanvas } from "./StyledFlowCanvas";
-import Toolbar from "../Toolbar/Toolbar";
+import ToolbarDock from "../Toolbar/ToolbarDock/ToolbarDock";
+import { StartNode } from "../FlowNodes/StartNode/StartNode";
 
 export default function FlowCanvas() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([
+    {
+      id: `node-0`,
+      type: "start",
+      position: {
+        x: 700,
+        y: 100,
+      },
+      data: {
+        text: "Start",
+      },
+    },
+  ]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const onConnect = useCallback(
     (params: any) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  const nodeTypes = useMemo(() => ({ start: StartNode }), []);
+
   return (
     <StyledFlowCanvas>
       <ReactFlow
@@ -28,12 +44,13 @@ export default function FlowCanvas() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
       >
         <Controls />
         <MiniMap pannable />
         <Background variant={BackgroundVariant.Lines} gap={40} />
       </ReactFlow>
-      <Toolbar />
+      <ToolbarDock />
     </StyledFlowCanvas>
   );
 }

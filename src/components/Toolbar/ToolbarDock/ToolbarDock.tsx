@@ -1,27 +1,27 @@
 import React from "react";
-import { StyledToolbar } from "./StyledToolbar";
+import { StyledToolbarDock } from "./StyledToolbarDock";
 import ToolbarItem from "../ToolbarItem/ToolbarItem";
 import {
+  ImportOutlined,
   PlayCircleOutlined,
   ShareAltOutlined,
-  UnorderedListOutlined,
 } from "@ant-design/icons";
 import theme from "@/styles/theme";
-import NoSsr from "../NoSsr";
+import NoSsr from "../../NoSsr";
 
-export default function Toolbar() {
+export default function ToolbarDock() {
   return (
     <NoSsr>
-      <StyledToolbar>
+      <StyledToolbarDock>
         <ToolbarItem
-          name="Contracts"
+          name="Import ABI"
           onClick={() => {}}
           color={theme.colors.green}
-          icon={<UnorderedListOutlined />}
+          icon={<ImportOutlined />}
           disabled={true}
         />
         <ToolbarItem
-          name="Execute"
+          name="Call"
           onClick={() => {}}
           color={theme.colors.primary}
           icon={<PlayCircleOutlined />}
@@ -34,7 +34,7 @@ export default function Toolbar() {
           icon={<ShareAltOutlined />}
           disabled={true}
         />
-      </StyledToolbar>
+      </StyledToolbarDock>
     </NoSsr>
   );
 }
