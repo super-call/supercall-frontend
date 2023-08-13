@@ -2,15 +2,19 @@ import HeadMetadata from "@/components/HeadMetadata";
 import WagmiRainbowKitProvider from "@/components/WagmiRainbowKitProvider";
 import ThemeGlobalStyleProvider from "@/styles/ThemeGlobalStyleProvider";
 import type { AppProps } from "next/app";
+import { Provider } from "react-redux";
+import { store } from "@/store";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <HeadMetadata />
       <ThemeGlobalStyleProvider>
-        <WagmiRainbowKitProvider>
-          <Component {...pageProps} />
-        </WagmiRainbowKitProvider>
+        <Provider store={store}>
+          <WagmiRainbowKitProvider>
+            <Component {...pageProps} />
+          </WagmiRainbowKitProvider>
+        </Provider>
       </ThemeGlobalStyleProvider>
     </>
   );
