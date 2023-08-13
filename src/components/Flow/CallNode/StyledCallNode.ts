@@ -11,4 +11,5 @@ export const StyledCallNode = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border: 2px solid #000;
 `;
