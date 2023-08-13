@@ -4,6 +4,7 @@ import theme from "@/styles/theme";
 import { PlayCircleOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { nodeDataState } from "../Flow/nodeDataSlice";
+import { combineNodeUtil } from "@/utils/combineNodeUtil";
 
 export default function CallTool() {
   const nodeData = useSelector((state: { nodeData: nodeDataState }) => {
@@ -15,6 +16,7 @@ export default function CallTool() {
 
   const handleClick = () => {
     console.log({ nodeData, nodeEdges });
+    console.log(combineNodeUtil(nodeEdges, nodeData));
   };
 
   return (
