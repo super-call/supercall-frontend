@@ -8,9 +8,29 @@ import { Select } from "antd";
 import { getSupportedChainConfigs } from "@/constants/chainList";
 import { updateNode } from "../nodeDataSlice";
 import { Input } from "antd";
+import {
+  setSelectedChainId,
+  setSelectedContractIndex,
+  setSelectedFunctionIndex,
+  setInputFields,
+  initializeNode,
+} from "./callNodeSlice";
 
-export function CallNode({ data }: { data: { id: number; text: string } }) {
+interface RootState {
+  callNode: {
+    [id: number]: {
+      selectedChainId: number | undefined;
+      selectedContractIndex: number | undefined;
+      selectedFunctionIndex: number | undefined;
+      inputFields: { value: any }[];
+    };
+  };
+}
+
+export function CallNode({ data }: { data: { text: string } }) {
   const dispatch = useDispatch();
+
+  const id = +data.text;
 
   const contractData = useSelector(
     (state: { userContract: userContractState }) => {
@@ -18,19 +38,20 @@ export function CallNode({ data }: { data: { id: number; text: string } }) {
     }
   );
 
-  const [selectedChainId, setSelectedChainId] = useState<number | undefined>(
-    undefined
-  );
+  const callNodeState = useSelector((state: RootState) => state.callNode);
 
-  const [selectedContractIndex, setSelectedContractIndex] = useState<
-    number | undefined
-  >(undefined);
+  const {
+    selectedChainId,
+    selectedContractIndex,
+    selectedFunctionIndex,
+    inputFields,
+  } = callNodeState[id] || {};
 
-  const [selectedFunctionIndex, setSelectedFunctionIndex] = useState<
-    number | undefined
-  >(undefined);
-
-  const [inputFields, setInputFields] = useState<{ value: any }[]>([]);
+  useEffect(() => {
+    if (!callNodeState[id]) {
+      dispatch(initializeNode({ id }));
+    }
+  }, []);
 
   const handleInputChange = (index: number, event: any) => {
     const newInputFields = [...inputFields];
@@ -38,7 +59,7 @@ export function CallNode({ data }: { data: { id: number; text: string } }) {
       ...newInputFields[index],
       value: event.target.value,
     };
-    setInputFields(newInputFields);
+    dispatch(setInputFields({ id, value: newInputFields }));
   };
 
   const handleSelectFunction = (selectFuncIndex: number) => {
@@ -48,7 +69,7 @@ export function CallNode({ data }: { data: { id: number; text: string } }) {
     ].contractABI[selectFuncIndex].inputs.forEach((input) => {
       newInputFields.push({ value: "" });
     });
-    setInputFields(newInputFields);
+    dispatch(setInputFields({ id, value: newInputFields }));
   };
 
   const handleDisptachState = useCallback(() => {
@@ -97,7 +118,7 @@ export function CallNode({ data }: { data: { id: number; text: string } }) {
         <Select
           value={selectedChainId}
           onChange={(value) => {
-            setSelectedChainId(value);
+            dispatch(setSelectedChainId({ id, value }));
           }}
           className="nodrag"
           placeholder="Contract Chain"
@@ -115,7 +136,7 @@ export function CallNode({ data }: { data: { id: number; text: string } }) {
           <Select
             value={selectedContractIndex}
             onChange={(value) => {
-              setSelectedContractIndex(value);
+              dispatch(setSelectedContractIndex({ id, value }));
             }}
             className="nodrag"
             placeholder="Contract Name"
@@ -136,7 +157,7 @@ export function CallNode({ data }: { data: { id: number; text: string } }) {
           <Select
             value={selectedFunctionIndex}
             onChange={(value) => {
-              setSelectedFunctionIndex(value);
+              dispatch(setSelectedFunctionIndex({ id, value }));
               handleSelectFunction(value);
             }}
             className="nodrag"

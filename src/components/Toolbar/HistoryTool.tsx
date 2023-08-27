@@ -78,7 +78,7 @@ export default function HistoryTool() {
   const [log, setLog] = useState<any>([]);
 
   useEffect(() => {
-    fetchingResult(txHash);
+    // fetchingResult(txHash);
   }, []);
 
   const fetchingResult = async (txHash: string) => {
