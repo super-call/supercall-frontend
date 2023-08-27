@@ -6,9 +6,16 @@ interface IAddressList {
 
 export const addressList: IAddressList = {
   lzSuperCall: {
-    5: "0x5",
-    97: "0x97",
-    43113: "0x43113",
+    5: "0x12345",
+    97: "0x12345",
+    43113: "0x12345",
+    80001: "0x12345",
+  },
+  axSuperCall: {
+    5: "0x12345",
+    97: "0x12345",
+    43113: "0x12345",
+    80001: "0x12345",
   },
 };
 
