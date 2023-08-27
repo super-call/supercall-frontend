@@ -107,7 +107,7 @@ export default function HistoryTool() {
 
         const res = await fetch(url, { method: "GET", headers: headers });
         const { data } = await res.json();
-        console.log(data.items[0].log_events[0]);
+        // console.log(data.items[0].log_events[0]);
         const logging = fromHex(
           data.items[0].log_events[0].raw_log_data,
           "string"
@@ -120,7 +120,7 @@ export default function HistoryTool() {
       })
     );
 
-    console.log(results);
+    // console.log(results);
 
     setLog(results);
   };
