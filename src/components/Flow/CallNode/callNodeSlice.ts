@@ -29,18 +29,24 @@ const callNodeSlice = createSlice({
       action: PayloadAction<{ id: number; value: number | undefined }>
     ) => {
       state[action.payload.id].selectedChainId = action.payload.value;
+      state[action.payload.id].selectedContractIndex = undefined;
+      state[action.payload.id].selectedFunctionIndex = undefined;
+      state[action.payload.id].inputFields = [];
     },
     setSelectedContractIndex: (
       state,
       action: PayloadAction<{ id: number; value: number | undefined }>
     ) => {
       state[action.payload.id].selectedContractIndex = action.payload.value;
+      state[action.payload.id].selectedFunctionIndex = undefined;
+      state[action.payload.id].inputFields = [];
     },
     setSelectedFunctionIndex: (
       state,
       action: PayloadAction<{ id: number; value: number | undefined }>
     ) => {
       state[action.payload.id].selectedFunctionIndex = action.payload.value;
+      state[action.payload.id].inputFields = [];
     },
     setInputFields: (
       state,
