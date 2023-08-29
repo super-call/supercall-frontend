@@ -120,3 +120,6 @@ export const axChainConfig = [
     label: "kava-testnet",
   },
 ];
+
+export const findAxChainConfigByChainId = (chainId: number) =>
+  axChainConfig.filter((chain) => chain.chainId === chainId)[0];
