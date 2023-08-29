@@ -84,7 +84,15 @@ export default function FlowCanvas() {
           } as any)
         );
 
-        dispatch(setNodeEdges(edges as any));
+        dispatch(
+          setNodeEdges(
+            (edges as any).concat({
+              id,
+              source: connectingNodeId.current,
+              target: id,
+            } as any)
+          )
+        );
       }
     },
     [project, setEdges, setNodes]

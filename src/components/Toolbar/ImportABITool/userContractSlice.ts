@@ -13,7 +13,19 @@ export interface userContractState {
   };
 }
 
-const initialState: userContractState = {
+const loadStateFromLocalStorage = () => {
+  try {
+    const serializedState = localStorage.getItem("userContractState");
+    if (serializedState === null) {
+      return undefined;
+    }
+    return JSON.parse(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+};
+
+const initialState: userContractState = loadStateFromLocalStorage() || {
   contractData: {},
 };
 
@@ -43,6 +55,7 @@ export const userContractSlice = createSlice({
           },
         ],
       };
+      localStorage.setItem("userContractState", JSON.stringify(state));
     },
   },
 });

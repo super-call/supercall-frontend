@@ -71,14 +71,12 @@ function Box({ detail }: any) {
 
 export default function HistoryTool() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [txHash, setTxHash] = useState(
-    "0x90b00331f0b44f4cf89cb3de911c267fe8945050d3bd260d0815f0575d3b5b1d"
-  );
+  const [txHash, setTxHash] = useState("");
 
   const [log, setLog] = useState<any>([]);
 
   useEffect(() => {
-    fetchingResult(txHash);
+    // fetchingResult(txHash);
   }, []);
 
   const fetchingResult = async (txHash: string) => {
@@ -107,7 +105,7 @@ export default function HistoryTool() {
 
         const res = await fetch(url, { method: "GET", headers: headers });
         const { data } = await res.json();
-        console.log(data.items[0].log_events[0]);
+        // console.log(data.items[0].log_events[0]);
         const logging = fromHex(
           data.items[0].log_events[0].raw_log_data,
           "string"
@@ -120,7 +118,7 @@ export default function HistoryTool() {
       })
     );
 
-    console.log(results);
+    // console.log(results);
 
     setLog(results);
   };
@@ -153,25 +151,22 @@ export default function HistoryTool() {
         onCancel={handleCancel}
       >
         <Space direction="vertical" style={{ width: "100%" }}>
-          <Input value={txHash} onChange={(e) => setTxHash(e.target.value)} />
+          <Input
+            placeholder="txHash"
+            value={txHash}
+            onChange={(e) => setTxHash(e.target.value)}
+          />
           <Button
             style={{ width: "100%", backgroundColor: theme.colors.black }}
             type="primary"
             onClick={() => fetchingResult(txHash)}
           >
-            search
+            Search
           </Button>
           {log.length > 0 &&
             log.map((detail: any, key: number) => (
               <Box key={key} detail={detail} />
             ))}
-          <Button
-            style={{ width: "100%", backgroundColor: theme.colors.black }}
-            type="primary"
-            onClick={handleCancel}
-          >
-            Close
-          </Button>
         </Space>
       </Modal>
     </>

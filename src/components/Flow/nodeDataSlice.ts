@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+export interface INode {
+  nodeId: number;
+  chainId: number;
+  contractAddress: string;
+  contractFunction: string;
+  inputData?: { value: any }[];
+}
 
 export interface nodeDataState {
-  nodeEdges: [];
-  nodeData: {
-    [key: number]: {
-      nodeId: number;
-      chainId: number;
-      contractAddress: string;
-      contractFunction: string;
-    }[];
-  };
+  nodeEdges: any[];
+  nodeData: { [key: number]: INode[] };
 }
 
 const initialState: nodeDataState = {
@@ -22,33 +22,15 @@ export const nodeDataSlice = createSlice({
   name: "nodeData",
   initialState,
   reducers: {
-    setNodeEdges: (state, action: PayloadAction<[]>) => {
+    setNodeEdges: (state, action: PayloadAction<any[]>) => {
       state.nodeEdges = action.payload;
     },
     updateNode: (
       state,
-      action: PayloadAction<{
-        nodeId: number;
-        chainId: number;
-        contractAddress: string;
-        contractFunction: string;
-      }>
+      action: PayloadAction<{ nodeId: number; updatedNodeData: INode }>
     ) => {
-      const { nodeId, chainId, contractAddress, contractFunction } =
-        action.payload;
-
-      state.nodeData = {
-        ...state.nodeData,
-        [nodeId]: [
-          ...(state.nodeData[nodeId] || []),
-          {
-            nodeId,
-            chainId,
-            contractAddress,
-            contractFunction,
-          },
-        ],
-      };
+      const { nodeId, updatedNodeData } = action.payload;
+      state.nodeData[nodeId] = [updatedNodeData];
     },
   },
 });
