@@ -1,4 +1,6 @@
+import { loggerABI } from "@/constants/abi/loggerABI";
 import { chainList } from "@/constants/chainList";
+import { DEFAULT_USER_CONTRACTS } from "@/constants/userContracts";
 import { FunctionInput } from "@/utils/abiUtils";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
@@ -25,9 +27,13 @@ const loadStateFromLocalStorage = () => {
   }
 };
 
-const initialState: userContractState = loadStateFromLocalStorage() || {
-  contractData: {},
+const initialState: userContractState = {
+  contractData: Object.assign(
+    DEFAULT_USER_CONTRACTS,
+    loadStateFromLocalStorage()
+  ),
 };
+
 
 export const userContractSlice = createSlice({
   name: "userContract",
@@ -55,7 +61,10 @@ export const userContractSlice = createSlice({
           },
         ],
       };
-      localStorage.setItem("userContractState", JSON.stringify(state));
+      localStorage.setItem(
+        "userContractState",
+        JSON.stringify(state.contractData)
+      );
     },
   },
 });

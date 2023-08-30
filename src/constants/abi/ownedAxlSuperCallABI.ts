@@ -1,4 +1,4 @@
-export const lzSuperCallABI = [
+export const ownedAxlSuperCallABI = [
   {
     inputs: [
       {
@@ -29,25 +29,6 @@ export const lzSuperCallABI = [
     inputs: [],
     name: "NotApprovedByGateway",
     type: "error",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
   },
   {
     inputs: [
@@ -162,130 +143,6 @@ export const lzSuperCallABI = [
         internalType: "contract IAxelarGateway",
         name: "",
         type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_owner",
-        type: "address",
-      },
-      {
-        internalType: "string",
-        name: "_sourceChain",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_sourceAddress",
-        type: "string",
-      },
-    ],
-    name: "init",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "isInitialized",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "sourceChain_",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "sourceAddress_",
-        type: "string",
-      },
-    ],
-    name: "setTrustedRemote",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string[]",
-        name: "sourceChains_",
-        type: "string[]",
-      },
-      {
-        internalType: "string[]",
-        name: "sourceAddresses_",
-        type: "string[]",
-      },
-    ],
-    name: "setTrustedRemotes",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    name: "trustedRemoteLookup",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
       },
     ],
     stateMutability: "view",
