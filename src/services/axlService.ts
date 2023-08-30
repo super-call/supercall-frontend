@@ -1,17 +1,26 @@
 import { encodeFunctionData } from "viem";
 import { AxlCall } from "@super-call/sdk";
 import { AxelarQueryAPI, Environment } from "@axelar-network/axelarjs-sdk";
+import { getNetwork } from "@wagmi/core";
 
 import { findAxChainConfigByChainId } from "@/constants/axChainConfig";
 import { userContractState } from "@/components/Toolbar/ImportABITool/userContractSlice";
 import { FunctionInput } from "@/utils/abiUtils";
+import { getPublicClient, getWalletClient } from "@/lib/viem";
+import { ChainID } from "@/constants/chainList";
 
-export const axlCallMapping = (
+export const axlCallMapping = async (
   callArray: any[],
-  userContract: userContractState["contractData"]
-): AxlCall[] => {
+  userContract: userContractState["contractData"],
+  sourceChainId?: ChainID
+): Promise<AxlCall[]> => {
+  // Initial
   let calls = [new AxlCall("", "", "")];
-  callArray.forEach((call, index) => {
+  const { chain: currentChain } = getNetwork();
+  sourceChainId = sourceChainId ? sourceChainId : (currentChain?.id as ChainID);
+
+  for (let index = 0; index < callArray.length; index++) {
+    const call = callArray[index];
     const chain = findAxChainConfigByChainId(call.chainId);
     const contractList = userContract[call.chainId];
     const contract = contractList.filter(
@@ -24,6 +33,19 @@ export const axlCallMapping = (
       args: inputData,
     });
 
+    // Calculate fee
+    const fee = await estimateAxlFee({
+      targetAddress: call.contractAddress,
+      contractABI: contract.contractABI,
+      args: inputData,
+      functionName: call.contractFunction,
+      sourceChainName: findAxChainConfigByChainId(sourceChainId || -1).name,
+      destinationChainName: chain.name,
+      sourceChainTokenSymbol: findAxChainConfigByChainId(sourceChainId || -1)
+        .tokenSymbol,
+      sourceChainId: sourceChainId as ChainID,
+    });
+
     if (index === 0) {
       calls = [
         new AxlCall(
@@ -31,7 +53,7 @@ export const axlCallMapping = (
           call.contractAddress,
           callData,
           "0xE3876f1D0D0DbC782d7844FdE8675c75628E36a2",
-          "1"
+          fee
         ),
       ];
     } else {
@@ -41,61 +63,71 @@ export const axlCallMapping = (
           call.contractAddress,
           callData,
           "0xE3876f1D0D0DbC782d7844FdE8675c75628E36a2",
-          "1"
+          fee
         )
       );
     }
     if (call.subNodes.length > 0) {
-      const subCalls = axlCallMapping(call.subNodes, userContract);
-      if (subCalls) {
-        subCalls.forEach((subCall: AxlCall) =>
-          calls[calls.length - 1].addSubCall(subCall)
-        );
-      }
+      const subCalls = await axlCallMapping(
+        call.subNodes,
+        userContract,
+        call.chainId
+      );
+
+      subCalls.map((subCall: AxlCall) =>
+        calls[calls.length - 1].addSubCall(subCall)
+      );
     }
-  });
+  }
+
   return calls;
 };
 
 export const inputDataMapping = (inputData: { value: string | number }[]) =>
   inputData.map((data) => data.value);
 
-// FIXME: do estimate gas next
-// if same chain => https://viem.sh/docs/contract/estimateContractGas.html#estimatecontractgas
-// if cross chain => axlAPI.estimateGasFee
 export interface IEstimateAxlFee {
-  targetAddress: string;
+  targetAddress: `0x${string}`;
   contractABI: FunctionInput[];
+  args?: any[];
   functionName: string;
-  sourceChainId: string;
-  destinationChainId: string;
+  sourceChainName: string;
+  destinationChainName: string;
   sourceChainTokenSymbol: string;
+  sourceChainId: ChainID;
 }
 export const estimateAxlFee = async ({
   targetAddress,
   contractABI,
+  args,
   functionName,
-  sourceChainId,
-  destinationChainId,
+  sourceChainName,
+  destinationChainName,
   sourceChainTokenSymbol,
-}: IEstimateAxlFee) => {
-  // targetContract, abi, functionName, account
-  // sourceChainId, destinationChainId, sourcChainTokenSymbol
+  sourceChainId,
+}: IEstimateAxlFee): Promise<string> => {
+  if (sourceChainName === destinationChainName) {
+    // same chain
+    const walletClient = getWalletClient(sourceChainId);
+    const [account] = await walletClient.getAddresses();
+    const fee = await getPublicClient(sourceChainId).estimateContractGas({
+      address: targetAddress,
+      abi: contractABI,
+      args: args,
+      functionName: functionName,
+      account,
+    });
+    return fee.toString();
+  } else {
+    // cross chain
+    const axlAPI = new AxelarQueryAPI({ environment: Environment.TESTNET });
 
-  // same chain
-  // const gas = await publicClient.estimateContractGas({
-  //   address: targetAddress,
-  //   abi: contractABI,
-  //   functionName: functionName,
-  //   account,
-  // });
+    const fee = await axlAPI.estimateGasFee(
+      sourceChainName.toUpperCase(),
+      destinationChainName.toUpperCase(),
+      sourceChainTokenSymbol
+    );
 
-  // cross chain
-  const axlAPI = new AxelarQueryAPI({ environment: Environment.TESTNET });
-
-  // const fee = await axlAPI.estimateGasFee(
-  //   sourceChain.name.toUpperCase(),
-  //   chain.toUpperCase(),
-  //   sourceChain.tokenSymbol
-  // );
+    return fee as string;
+  }
 };
