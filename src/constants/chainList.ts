@@ -1,4 +1,11 @@
-import { avalancheFuji, bscTestnet, goerli, polygonMumbai, baseGoerli } from "wagmi/chains";
+import {
+  avalancheFuji,
+  bscTestnet,
+  goerli,
+  polygonMumbai,
+  baseGoerli,
+  fantomTestnet,
+} from "wagmi/chains";
 
 export const chainList = {
   5: goerli,
@@ -6,6 +13,7 @@ export const chainList = {
   80001: polygonMumbai,
   43113: avalancheFuji,
   84531: baseGoerli,
+  4002: fantomTestnet,
 } as const;
 
 export type ChainID = keyof typeof chainList;
