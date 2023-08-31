@@ -8,6 +8,7 @@ import { userContractState } from "@/components/Toolbar/ImportABITool/userContra
 import { FunctionInput } from "@/utils/abiUtils";
 import { getPublicClient, getWalletClient } from "@/lib/viem";
 import { ChainID } from "@/constants/chainList";
+import { axSuperContract } from "@/constants/contractList";
 
 export const axlCallMapping = async (
   callArray: any[],
@@ -32,6 +33,7 @@ export const axlCallMapping = async (
       functionName: call.contractFunction,
       args: inputData,
     });
+    const publicSuperCallAddr = axSuperContract(call.chainId).address;
 
     // Calculate fee
     const fee = await estimateAxlFee({
@@ -52,7 +54,7 @@ export const axlCallMapping = async (
           chain.name,
           call.contractAddress,
           callData,
-          "0xE3876f1D0D0DbC782d7844FdE8675c75628E36a2",
+          publicSuperCallAddr,
           fee
         ),
       ];
@@ -62,7 +64,7 @@ export const axlCallMapping = async (
           chain.name,
           call.contractAddress,
           callData,
-          "0xE3876f1D0D0DbC782d7844FdE8675c75628E36a2",
+          publicSuperCallAddr,
           fee
         )
       );
@@ -108,16 +110,22 @@ export const estimateAxlFee = async ({
 }: IEstimateAxlFee): Promise<string> => {
   if (sourceChainName === destinationChainName) {
     // same chain
-    const walletClient = getWalletClient(sourceChainId);
-    const [account] = await walletClient.getAddresses();
-    const fee = await getPublicClient(sourceChainId).estimateContractGas({
-      address: targetAddress,
-      abi: contractABI,
-      args: args,
-      functionName: functionName,
-      account,
-    });
-    return fee.toString();
+    try {
+      const walletClient = getWalletClient(sourceChainId);
+      const [account] = await walletClient.getAddresses();
+      const fee = await getPublicClient(sourceChainId).estimateContractGas({
+        address: targetAddress,
+        abi: contractABI,
+        args: args,
+        functionName: functionName,
+        account,
+      });
+      return fee.toString();
+    } catch (e) {
+      console.log(e);
+      return "0";
+    }
+    
   } else {
     // cross chain
     const axlAPI = new AxelarQueryAPI({ environment: Environment.TESTNET });

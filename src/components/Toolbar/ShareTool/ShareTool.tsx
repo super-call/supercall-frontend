@@ -2,7 +2,7 @@ import theme from "@/styles/theme";
 import { ShareAltOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import ToolbarItem from "../ToolbarItem/ToolbarItem";
-import { Divider, Modal } from "antd";
+import { Divider, Modal, Spin } from "antd";
 import styled from "styled-components";
 import { Input, Button } from "antd";
 import { useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import superCallService from "@/services/supercallService";
 import { RootState } from "@/store";
 
 export default function ShareTool() {
+  const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
 
   const { canvasData, nodeEdges } = useSelector(
@@ -24,11 +25,13 @@ export default function ShareTool() {
   });
 
   const handleClick = () => {
+    setLoading(true);
     const data = { nodeData: canvasData.nodes, nodeState, nodeEdges };
     superCallService
       .createSuperCall(data)
       .then((res) => {
         setUrl(window.location.origin + `/${res.data.insertedId}`);
+        setLoading(false);
         showModal();
       })
       .catch((err) => {
@@ -91,11 +94,19 @@ export default function ShareTool() {
           </Button>
         </StyledContainer>
       </Modal>
+
       <ToolbarItem
+        disabled={loading}
         name="Share"
         onClick={handleClick}
         color={theme.colors.blue}
-        icon={<ShareAltOutlined />}
+        icon={
+          loading ? (
+            <Spin style={{ marginBottom: "2px" }} />
+          ) : (
+            <ShareAltOutlined />
+          )
+        }
       />
     </>
   );

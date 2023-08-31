@@ -53,6 +53,15 @@ export function CallNode({ data }: { data: { text: string } }) {
     }
   }, []);
 
+  const contractFunctions = useMemo(() => {
+    if (selectedChainId === null || selectedChainId === undefined) return [];
+    if (selectedContractIndex === null || selectedContractIndex === undefined)
+      return [];
+    return contractData[selectedChainId][
+      selectedContractIndex
+    ].contractABI.filter((func) => func.type === "function");
+  }, [selectedChainId, selectedContractIndex]);
+
   const handleInputChange = (index: number, event: any) => {
     const newInputFields = [...inputFields];
     newInputFields[index] = {
@@ -64,9 +73,7 @@ export function CallNode({ data }: { data: { text: string } }) {
 
   const handleSelectFunction = (selectFuncIndex: number) => {
     const newInputFields: { value: any }[] = [];
-    contractData[selectedChainId as number][
-      selectedContractIndex as number
-    ].contractABI[selectFuncIndex].inputs.forEach((input) => {
+    contractFunctions[selectFuncIndex].inputs.forEach((input) => {
       newInputFields.push({ value: "" });
     });
     dispatch(setInputFields({ id, value: newInputFields }));
@@ -83,10 +90,7 @@ export function CallNode({ data }: { data: { text: string } }) {
     const nodeId = +data.text;
     const contractAddress =
       contractData[selectedChainId][selectedContractIndex].contractAddress;
-    const contractFunction =
-      contractData[selectedChainId][selectedContractIndex].contractABI[
-        selectedFunctionIndex
-      ].name;
+    const contractFunction = contractFunctions[selectedFunctionIndex].name;
 
     const updatedNodeData = {
       nodeId,
@@ -106,14 +110,6 @@ export function CallNode({ data }: { data: { text: string } }) {
     contractData,
     data.text,
   ]);
-
-  const contractFunctions = useMemo(() => {
-    if (!selectedChainId) return [];
-    if (!selectedContractIndex) return [];
-    return contractData[selectedChainId][
-      selectedContractIndex
-    ].contractABI.filter((func) => func.type === "function");
-  }, [selectedChainId, selectedContractIndex]);
 
   useEffect(() => {
     handleDisptachState();
@@ -187,11 +183,13 @@ export function CallNode({ data }: { data: { text: string } }) {
         selectedContractIndex != undefined &&
         selectedFunctionIndex !== undefined ? (
           <div style={{ marginTop: "7px" }}>
+            <hr />
             {contractData[selectedChainId][selectedContractIndex]
               ? contractFunctions[selectedFunctionIndex].inputs.map(
                   (input, i) => {
                     return (
                       <Input
+                        style={{ marginTop: "7px" }}
                         key={i}
                         value={inputFields[i] ? inputFields[i].value : ""}
                         onChange={(event) => handleInputChange(i, event)}
