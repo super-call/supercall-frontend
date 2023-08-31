@@ -1,4 +1,4 @@
 export const menuList = [
   { label: "Home", link: "/" },
-  { label: "MangeABI", link: "/abi" },
+  { label: "ABI", link: "/abi" },
 ];

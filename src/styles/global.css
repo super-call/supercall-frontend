@@ -1,3 +1,7 @@
 .ant-spin-dot-item {
     background-color: white !important;
 }
+
+.nav-item:hover {
+    opacity: 50%;
+}
