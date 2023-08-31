@@ -110,16 +110,22 @@ export const estimateAxlFee = async ({
 }: IEstimateAxlFee): Promise<string> => {
   if (sourceChainName === destinationChainName) {
     // same chain
-    const walletClient = getWalletClient(sourceChainId);
-    const [account] = await walletClient.getAddresses();
-    const fee = await getPublicClient(sourceChainId).estimateContractGas({
-      address: targetAddress,
-      abi: contractABI,
-      args: args,
-      functionName: functionName,
-      account,
-    });
-    return fee.toString();
+    try {
+      const walletClient = getWalletClient(sourceChainId);
+      const [account] = await walletClient.getAddresses();
+      const fee = await getPublicClient(sourceChainId).estimateContractGas({
+        address: targetAddress,
+        abi: contractABI,
+        args: args,
+        functionName: functionName,
+        account,
+      });
+      return fee.toString();
+    } catch (e) {
+      console.log(e);
+      return "0";
+    }
+    
   } else {
     // cross chain
     const axlAPI = new AxelarQueryAPI({ environment: Environment.TESTNET });
