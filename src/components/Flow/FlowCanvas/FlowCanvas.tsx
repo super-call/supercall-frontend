@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import "reactflow/dist/style.css";
 import ReactFlow, {
   useNodesState,
@@ -15,29 +15,43 @@ import ToolbarDock from "../../Toolbar/ToolbarDock/ToolbarDock";
 import { StartNode } from "../StartNode/StartNode";
 import { CallNode } from "../CallNode/CallNode";
 import { useDispatch } from "react-redux";
-import { setNodeEdges } from "../nodeDataSlice";
+import { setCanvasData, setNodeEdges } from "../nodeDataSlice";
 
 let id = 1;
 const getId = () => `${id++}`;
 
-export default function FlowCanvas() {
+export default function FlowCanvas({
+  data,
+}: {
+  data?: { nodes: any[]; edges: any[] };
+}) {
   const dispatch = useDispatch();
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([
-    {
-      id: `0`,
-      type: "start",
-      position: {
-        x: 700,
-        y: 100,
-      },
-      data: {
-        text: "Start",
-      },
-    },
-  ]);
+  useEffect(() => {
+    if (data) {
+      setNodes(data.nodes);
+      setEdges(data.edges);
+    }
+  }, [data]);
 
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState(
+    data?.nodes || [
+      {
+        id: `0`,
+        type: "start",
+        position: {
+          x: 700,
+          y: 100,
+        },
+        data: {
+          text: "Start",
+        },
+      },
+    ]
+  );
+
+  const [edges, setEdges, onEdgesChange] = useEdgesState(data?.edges || []);
+
   const onConnect = useCallback(
     (params: any) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
@@ -95,8 +109,12 @@ export default function FlowCanvas() {
         );
       }
     },
-    [project, setEdges, setNodes]
+    [project, setEdges, setNodes, dispatch, edges]
   );
+
+  useEffect(() => {
+    dispatch(setCanvasData({ nodes }));
+  }, [nodes, dispatch]);
 
   const nodeTypes = useMemo(() => ({ start: StartNode, call: CallNode }), []);
 

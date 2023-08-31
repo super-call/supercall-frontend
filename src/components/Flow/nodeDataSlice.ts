@@ -11,17 +11,22 @@ export interface INode {
 export interface nodeDataState {
   nodeEdges: any[];
   nodeData: { [key: number]: INode[] };
+  canvasData: any;
 }
 
 const initialState: nodeDataState = {
   nodeEdges: [],
   nodeData: {},
+  canvasData: {},
 };
 
 export const nodeDataSlice = createSlice({
   name: "nodeData",
   initialState,
   reducers: {
+    setCanvasData: (state, action: PayloadAction<any>) => {
+      state.canvasData = action.payload;
+    },
     setNodeEdges: (state, action: PayloadAction<any[]>) => {
       state.nodeEdges = action.payload;
     },
@@ -35,6 +40,7 @@ export const nodeDataSlice = createSlice({
   },
 });
 
-export const { updateNode, setNodeEdges } = nodeDataSlice.actions;
+export const { updateNode, setNodeEdges, setCanvasData } =
+  nodeDataSlice.actions;
 
 export default nodeDataSlice.reducer;

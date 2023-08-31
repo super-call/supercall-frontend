@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 import { StyledCallNode } from "./StyledCallNode";
 import { StyledNodeBackdrop } from "../StyledNodeBackdrop";
@@ -109,7 +109,7 @@ export function CallNode({ data }: { data: { text: string } }) {
 
   useEffect(() => {
     handleDisptachState();
-  }, [selectedFunctionIndex, inputFields, , handleDisptachState]);
+  }, [selectedFunctionIndex, inputFields, handleDisptachState]);
 
   return (
     <div style={{ position: "relative" }}>
