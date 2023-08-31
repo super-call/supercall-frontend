@@ -34,7 +34,6 @@ const initialState: userContractState = {
   ),
 };
 
-
 export const userContractSlice = createSlice({
   name: "userContract",
   initialState,
@@ -78,12 +77,23 @@ export const userContractSlice = createSlice({
     ) => {
       const { chainId, contractName, contractAddress, contractABI, key } =
         action.payload;
-      state.contractData[chainId][key] = {
-        contractName,
-        contractAddress,
-        contractABI,
+      const stateByChainId = state.contractData[chainId].map((abi, index) => {
+        if (index === key) {
+          return {
+            contractName,
+            contractAddress,
+            contractABI,
+          };
+        }
+        return abi;
+      });
+
+      state.contractData = {
+        ...state.contractData,
+        [chainId]: stateByChainId,
       };
-      localStorage.setItem("userContractState", JSON.stringify(state));
+      localStorage.setItem("userContractState", JSON.stringify(state.contractData));
+      console.log(state.contractData[chainId]);
     },
     deleteContract: (
       state,
@@ -93,13 +103,15 @@ export const userContractSlice = createSlice({
       }>
     ) => {
       const { chainId, key } = action.payload;
-      const stateByChainId = state.contractData[chainId].filter((abi, index) => index !== key);
+      const stateByChainId = state.contractData[chainId].filter(
+        (abi, index) => index !== key
+      );
 
       state.contractData = {
         ...state.contractData,
-        [chainId]: stateByChainId
-      }
-      localStorage.setItem("userContractState", JSON.stringify(state));
+        [chainId]: stateByChainId,
+      };
+      localStorage.setItem("userContractState", JSON.stringify(state.contractData));
     },
   },
 });
