@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Handle, Position } from "reactflow";
 import { StyledCallNode } from "./StyledCallNode";
 import { StyledNodeBackdrop } from "../StyledNodeBackdrop";
@@ -107,6 +107,14 @@ export function CallNode({ data }: { data: { text: string } }) {
     data.text,
   ]);
 
+  const contractFunctions = useMemo(() => {
+    if (!selectedChainId) return [];
+    if (!selectedContractIndex) return [];
+    return contractData[selectedChainId][selectedContractIndex].contractABI.filter(
+      (func) => func.type === "function"
+    );
+  }, [selectedChainId, selectedContractIndex]);
+
   useEffect(() => {
     handleDisptachState();
   }, [selectedFunctionIndex, inputFields, , handleDisptachState]);
@@ -165,14 +173,13 @@ export function CallNode({ data }: { data: { text: string } }) {
             style={{ width: "100%", marginTop: "7px" }}
             options={[
               ...(contractData[selectedChainId][selectedContractIndex]
-                ? contractData[selectedChainId][
-                    selectedContractIndex
-                  ].contractABI.map((func, i) => {
-                    return {
-                      value: i,
-                      label: func.name,
-                    };
-                  })
+                ? contractFunctions
+                    .map((func, i) => {
+                      return {
+                        value: i,
+                        label: func.name,
+                      };
+                    })
                 : []),
             ]}
           />
@@ -182,9 +189,7 @@ export function CallNode({ data }: { data: { text: string } }) {
         selectedFunctionIndex !== undefined ? (
           <div style={{ marginTop: "7px" }}>
             {contractData[selectedChainId][selectedContractIndex]
-              ? contractData[selectedChainId][
-                  selectedContractIndex
-                ].contractABI[selectedFunctionIndex].inputs.map((input, i) => {
+              ? contractFunctions[selectedFunctionIndex].inputs.map((input, i) => {
                   return (
                     <Input
                       key={i}

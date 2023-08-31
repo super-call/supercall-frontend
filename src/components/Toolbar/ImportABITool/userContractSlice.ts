@@ -1,4 +1,6 @@
+import { loggerABI } from "@/constants/abi/loggerABI";
 import { chainList } from "@/constants/chainList";
+import { DEFAULT_USER_CONTRACTS } from "@/constants/userContracts";
 import { FunctionInput } from "@/utils/abiUtils";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
@@ -25,9 +27,13 @@ const loadStateFromLocalStorage = () => {
   }
 };
 
-const initialState: userContractState = loadStateFromLocalStorage() || {
-  contractData: {},
+const initialState: userContractState = {
+  contractData: Object.assign(
+    DEFAULT_USER_CONTRACTS,
+    loadStateFromLocalStorage()
+  ),
 };
+
 
 export const userContractSlice = createSlice({
   name: "userContract",
@@ -55,11 +61,50 @@ export const userContractSlice = createSlice({
           },
         ],
       };
+      localStorage.setItem(
+        "userContractState",
+        JSON.stringify(state.contractData)
+      );
+    },
+    editContract: (
+      state,
+      action: PayloadAction<{
+        chainId: keyof typeof chainList;
+        contractName: string;
+        contractAddress: string;
+        contractABI: FunctionInput[];
+        key: number;
+      }>
+    ) => {
+      const { chainId, contractName, contractAddress, contractABI, key } =
+        action.payload;
+      state.contractData[chainId][key] = {
+        contractName,
+        contractAddress,
+        contractABI,
+      };
+      localStorage.setItem("userContractState", JSON.stringify(state));
+    },
+    deleteContract: (
+      state,
+      action: PayloadAction<{
+        chainId: keyof typeof chainList;
+        key: number;
+      }>
+    ) => {
+      const { chainId, key } = action.payload;
+      const stateByChainId = state.contractData[chainId].filter((abi, index) => index !== key);
+
+      state.contractData = {
+        ...state.contractData,
+        [chainId]: stateByChainId
+      }
       localStorage.setItem("userContractState", JSON.stringify(state));
     },
   },
 });
 
-export const { addContract } = userContractSlice.actions;
+export const { addContract, editContract, deleteContract } =
+  userContractSlice.actions;
 
 export default userContractSlice.reducer;
