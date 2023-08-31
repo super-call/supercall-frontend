@@ -53,6 +53,14 @@ export function CallNode({ data }: { data: { text: string } }) {
     }
   }, []);
 
+  const contractFunctions = useMemo(() => {
+    if (selectedChainId === null || selectedChainId === undefined) return [];
+    if (selectedContractIndex === null || selectedContractIndex === undefined) return [];
+    return contractData[selectedChainId][
+      selectedContractIndex
+    ].contractABI.filter((func) => func.type === "function");
+  }, [selectedChainId, selectedContractIndex]);
+
   const handleInputChange = (index: number, event: any) => {
     const newInputFields = [...inputFields];
     newInputFields[index] = {
@@ -64,9 +72,7 @@ export function CallNode({ data }: { data: { text: string } }) {
 
   const handleSelectFunction = (selectFuncIndex: number) => {
     const newInputFields: { value: any }[] = [];
-    contractData[selectedChainId as number][
-      selectedContractIndex as number
-    ].contractABI[selectFuncIndex].inputs.forEach((input) => {
+    contractFunctions[selectFuncIndex].inputs.forEach((input) => {
       newInputFields.push({ value: "" });
     });
     dispatch(setInputFields({ id, value: newInputFields }));
@@ -84,7 +90,7 @@ export function CallNode({ data }: { data: { text: string } }) {
     const contractAddress =
       contractData[selectedChainId][selectedContractIndex].contractAddress;
     const contractFunction =
-      contractData[selectedChainId][selectedContractIndex].contractABI[
+      contractFunctions[
         selectedFunctionIndex
       ].name;
 
@@ -106,14 +112,6 @@ export function CallNode({ data }: { data: { text: string } }) {
     contractData,
     data.text,
   ]);
-
-  const contractFunctions = useMemo(() => {
-    if (!selectedChainId) return [];
-    if (!selectedContractIndex) return [];
-    return contractData[selectedChainId][
-      selectedContractIndex
-    ].contractABI.filter((func) => func.type === "function");
-  }, [selectedChainId, selectedContractIndex]);
 
   useEffect(() => {
     handleDisptachState();

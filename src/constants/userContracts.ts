@@ -44,7 +44,7 @@ export const DEFAULT_USER_CONTRACTS = {
     },
     {
       contractName: "AxlSuperCall",
-      contractAddress: "",
+      contractAddress: "0x7F83B301e5Faa1d98bD9D4607932dC40D32f4b25",
       contractABI: axSuperCallABI,
     },
   ],
@@ -212,7 +212,7 @@ export const DEFAULT_USER_CONTRACTS = {
     },
     {
       contractName: "AxlSuperCall",
-      contractAddress: "",
+      contractAddress: "0xEC90f612c5950631e5deBd190B40b4BAd1cB1173",
       contractABI: axSuperCallABI,
     },
   ],

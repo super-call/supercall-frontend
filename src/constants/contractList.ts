@@ -12,6 +12,6 @@ export const lzSuperCallContract = (
 export const axSuperContract = (
   chainId: keyof typeof addressList.axSuperCall
 ) => ({
-  address: addressList.lzSuperCall[chainId],
+  address: addressList.axSuperCall[chainId],
   abi: axSuperCallABI,
 });

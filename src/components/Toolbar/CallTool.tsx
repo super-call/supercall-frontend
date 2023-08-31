@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { PlayCircleOutlined } from "@ant-design/icons";
-import { ethers } from "ethers";
 
 import ToolbarItem from "./ToolbarItem/ToolbarItem";
 import theme from "@/styles/theme";
@@ -12,10 +11,14 @@ import { userContractState } from "./ImportABITool/userContractSlice";
 import { aggregate } from "@/services/contract/axlSuperCall";
 import { axlCallMapping } from "@/services/axlService";
 import SuccessModal from "./SuccessModal/SuccessModal";
+import { useNetwork } from "wagmi";
+import { axSuperContract } from "@/constants/contractList";
 
 export default function CallTool() {
+  const network = useNetwork();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hash, setHash] = useState('');
+  const [hash, setHash] = useState("");
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -42,21 +45,27 @@ export default function CallTool() {
     }
   );
 
+  const currentChainId = useMemo(() => {
+    return network.chain?.id || null;
+  }, [network]);
+
   const handleClick = async () => {
     const callArray = convertEdgeNodeToArray(nodeEdges, nodeData);
+    console.log({ callArray })
     const axlCall = await axlCallMapping(callArray, userContract);
+    console.log({ axlCall });
     const axlCallEncoded = axlCall.map((call) => call.encode());
     const totalFee = axlCall
       .reduce((acc, cur) => acc + +cur.calculateTotalFee(), 0)
       .toString();
+    const publicSuperCallAddr = axSuperContract(currentChainId).address;
     const _hash = await aggregate(
-      "0x98206CFfa3df6C8A83EC77fbce63C96ba7F4C4a4",
+      publicSuperCallAddr,
       axlCallEncoded,
       BigInt(totalFee)
     );
-    console.log(_hash);
     if (_hash) {
-      setHash(_hash || '');
+      setHash(_hash || "");
       showModal();
     }
   };
