@@ -57,9 +57,45 @@ export const userContractSlice = createSlice({
       };
       localStorage.setItem("userContractState", JSON.stringify(state));
     },
+    editContract: (
+      state,
+      action: PayloadAction<{
+        chainId: keyof typeof chainList;
+        contractName: string;
+        contractAddress: string;
+        contractABI: FunctionInput[];
+        key: number;
+      }>
+    ) => {
+      const { chainId, contractName, contractAddress, contractABI, key } =
+        action.payload;
+      state.contractData[chainId][key] = {
+        contractName,
+        contractAddress,
+        contractABI,
+      };
+      localStorage.setItem("userContractState", JSON.stringify(state));
+    },
+    deleteContract: (
+      state,
+      action: PayloadAction<{
+        chainId: keyof typeof chainList;
+        key: number;
+      }>
+    ) => {
+      const { chainId, key } = action.payload;
+      const stateByChainId = state.contractData[chainId].filter((abi, index) => index !== key);
+
+      state.contractData = {
+        ...state.contractData,
+        [chainId]: stateByChainId
+      }
+      localStorage.setItem("userContractState", JSON.stringify(state));
+    },
   },
 });
 
-export const { addContract } = userContractSlice.actions;
+export const { addContract, editContract, deleteContract } =
+  userContractSlice.actions;
 
 export default userContractSlice.reducer;
