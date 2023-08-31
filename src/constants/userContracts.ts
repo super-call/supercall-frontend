@@ -4,6 +4,7 @@ import { create3DeployerABI } from "./abi/create3DeployerABI";
 import { uniswapV2RouterABI } from "./abi/uniswapV2RouterABI";
 import { compoundABI } from "./abi/compoundABI";
 import { axSuperCallABI } from "./abi/axSuperCallABI";
+import { axlGatewayABI } from "./abi/axlGatewayABI";
 
 export const DEFAULT_USER_CONTRACTS = {
   5: [
@@ -47,6 +48,11 @@ export const DEFAULT_USER_CONTRACTS = {
       contractAddress: "0x7F83B301e5Faa1d98bD9D4607932dC40D32f4b25",
       contractABI: axSuperCallABI,
     },
+    {
+      contractName: "AxlGateway",
+      contractAddress: "0x7F83B301e5Faa1d98bD9D4607932dC40D32f4b25",
+      contractABI: axlGatewayABI,
+    },
   ],
   97: [
     {
@@ -88,6 +94,11 @@ export const DEFAULT_USER_CONTRACTS = {
       contractName: "AxlSuperCall",
       contractAddress: "0x98206CFfa3df6C8A83EC77fbce63C96ba7F4C4a4",
       contractABI: axSuperCallABI,
+    },
+    {
+      contractName: "AxlGateway",
+      contractAddress: "0x7F83B301e5Faa1d98bD9D4607932dC40D32f4b25",
+      contractABI: axlGatewayABI,
     },
   ],
   80001: [
@@ -131,6 +142,11 @@ export const DEFAULT_USER_CONTRACTS = {
       contractAddress: "0x4b47c7A769685321FB431F32F9790b45e889F78c",
       contractABI: axSuperCallABI,
     },
+    {
+      contractName: "AxlGateway",
+      contractAddress: "0xBF62ef1486468a6bd26Dd669C06db43dEd5B849B",
+      contractABI: axlGatewayABI,
+    },
   ],
   43113: [
     {
@@ -172,6 +188,11 @@ export const DEFAULT_USER_CONTRACTS = {
       contractName: "AxlSuperCall",
       contractAddress: "0x65cf940df239ff0C90E8fa031DFEf6e586f8527B",
       contractABI: axSuperCallABI,
+    },
+    {
+      contractName: "AxlGateway",
+      contractAddress: "0xC249632c2D40b9001FE907806902f63038B737Ab",
+      contractABI: axlGatewayABI,
     },
   ],
   84531: [
@@ -215,6 +236,11 @@ export const DEFAULT_USER_CONTRACTS = {
       contractAddress: "0xEC90f612c5950631e5deBd190B40b4BAd1cB1173",
       contractABI: axSuperCallABI,
     },
+    {
+      contractName: "AxlGateway",
+      contractAddress: "0x7F83B301e5Faa1d98bD9D4607932dC40D32f4b25",
+      contractABI: axlGatewayABI,
+    },
   ],
   4002: [
     {
@@ -256,6 +282,11 @@ export const DEFAULT_USER_CONTRACTS = {
       contractName: "AxlSuperCall",
       contractAddress: "0x59F568e1CFBFc0187074f2CC0055C4cF090AFa3f",
       contractABI: axSuperCallABI,
+    },
+    {
+      contractName: "AxlGateway",
+      contractAddress: "0x97837985Ec0494E7b9C71f5D3f9250188477ae14",
+      contractABI: axlGatewayABI,
     },
   ],
 };

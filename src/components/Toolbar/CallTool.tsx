@@ -58,7 +58,7 @@ export default function CallTool() {
     const totalFee = axlCall
       .reduce((acc, cur) => acc + +cur.calculateTotalFee(), 0)
       .toString();
-    const publicSuperCallAddr = axSuperContract(currentChainId).address;
+    const publicSuperCallAddr = axSuperContract(currentChainId as any).address;
     const _hash = await aggregate(
       publicSuperCallAddr,
       axlCallEncoded,
