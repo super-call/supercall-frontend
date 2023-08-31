@@ -55,7 +55,8 @@ export function CallNode({ data }: { data: { text: string } }) {
 
   const contractFunctions = useMemo(() => {
     if (selectedChainId === null || selectedChainId === undefined) return [];
-    if (selectedContractIndex === null || selectedContractIndex === undefined) return [];
+    if (selectedContractIndex === null || selectedContractIndex === undefined)
+      return [];
     return contractData[selectedChainId][
       selectedContractIndex
     ].contractABI.filter((func) => func.type === "function");
@@ -89,10 +90,7 @@ export function CallNode({ data }: { data: { text: string } }) {
     const nodeId = +data.text;
     const contractAddress =
       contractData[selectedChainId][selectedContractIndex].contractAddress;
-    const contractFunction =
-      contractFunctions[
-        selectedFunctionIndex
-      ].name;
+    const contractFunction = contractFunctions[selectedFunctionIndex].name;
 
     const updatedNodeData = {
       nodeId,
@@ -185,11 +183,13 @@ export function CallNode({ data }: { data: { text: string } }) {
         selectedContractIndex != undefined &&
         selectedFunctionIndex !== undefined ? (
           <div style={{ marginTop: "7px" }}>
+            <hr />
             {contractData[selectedChainId][selectedContractIndex]
               ? contractFunctions[selectedFunctionIndex].inputs.map(
                   (input, i) => {
                     return (
                       <Input
+                        style={{ marginTop: "7px" }}
                         key={i}
                         value={inputFields[i] ? inputFields[i].value : ""}
                         onChange={(event) => handleInputChange(i, event)}
