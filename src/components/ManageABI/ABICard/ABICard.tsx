@@ -57,7 +57,12 @@ export default function ABICard({
     return (
       <StyledHeader>
         <div>
-          <Image src={`/images/chain/${chainId}.png`} alt={`${chainId}`} width={40} height={40} />
+          <Image
+            src={`/images/chain/${chainId}.png`}
+            alt={`${chainId}`}
+            width={40}
+            height={40}
+          />
         </div>
         <h4 style={{ fontSize: 16 }}>{chainList[chainId as ChainID].name}</h4>
       </StyledHeader>
@@ -78,9 +83,19 @@ export default function ABICard({
           <div style={{ margin: "20px 0px" }}>
             <div style={{ fontWeight: 700 }}>Contract Function</div>
             <div>
-              {abi.contractABI.map((input, key) => (
-                <div key={key}>{input.name}</div>
+              {abi.contractABI.filter((input, key) => key < 3).map((input, key) => (
+                <div
+                  key={key}
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {input.name}
+                </div>
               ))}
+              {abi.contractABI.length <= 3 ? <div />: <div>...</div>}
             </div>
           </div>
           <Button

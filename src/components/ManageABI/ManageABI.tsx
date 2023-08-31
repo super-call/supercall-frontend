@@ -13,6 +13,7 @@ export default function ManageABI() {
       return state.userContract.contractData;
     }
   );
+
   const [selecteedContractData, setSelecteedContractData] = useState(contractData);
   const [domLoaded, setDomLoaded] = useState(false);
 
@@ -21,11 +22,9 @@ export default function ManageABI() {
   }, []);
 
   useEffect(() => {
-    console.log(selectedChain);
     if (selectedChain === -1) {
       setSelecteedContractData(contractData);
     } else if (contractData[selectedChain]) {
-      console.log(contractData[selectedChain]);
       setSelecteedContractData({ [selectedChain]: contractData[selectedChain]});
     } else {
       setSelecteedContractData({});
