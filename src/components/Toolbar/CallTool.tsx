@@ -7,7 +7,7 @@ import theme from "@/styles/theme";
 import { nodeDataState } from "../Flow/nodeDataSlice";
 import { convertEdgeNodeToArray } from "@/utils/superCallUtils";
 import { userContractState } from "./ImportABITool/userContractSlice";
-
+import { Spin } from "antd";
 import { aggregate } from "@/services/contract/axlSuperCall";
 import { axlCallMapping } from "@/services/axlService";
 import SuccessModal from "./SuccessModal/SuccessModal";
@@ -15,6 +15,7 @@ import { useNetwork } from "wagmi";
 import { axSuperContract } from "@/constants/contractList";
 
 export default function CallTool() {
+  const [loading, setLoading] = useState(false);
   const network = useNetwork();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,8 +51,9 @@ export default function CallTool() {
   }, [network]);
 
   const handleClick = async () => {
+    setLoading(true);
     const callArray = convertEdgeNodeToArray(nodeEdges, nodeData);
-    console.log({ callArray })
+    console.log({ callArray });
     const axlCall = await axlCallMapping(callArray, userContract);
     console.log({ axlCall });
     const axlCallEncoded = axlCall.map((call) => call.encode());
@@ -66,17 +68,26 @@ export default function CallTool() {
     );
     if (_hash) {
       setHash(_hash || "");
+      setLoading(false);
       showModal();
     }
+    setLoading(false);
   };
 
   return (
     <>
       <ToolbarItem
+        disabled={loading}
         name="Call"
         onClick={() => handleClick()}
         color={theme.colors.primary}
-        icon={<PlayCircleOutlined />}
+        icon={
+          loading ? (
+            <Spin style={{ marginBottom: "2px" }} />
+          ) : (
+            <PlayCircleOutlined />
+          )
+        }
       />
       <SuccessModal
         isModalOpen={isModalOpen}
