@@ -24,6 +24,9 @@ const callNodeSlice = createSlice({
         inputFields: [],
       };
     },
+    setInitialState: (state, action: PayloadAction<any>) => {
+      return action.payload;
+    },
     setSelectedChainId: (
       state,
       action: PayloadAction<{ id: number; value: number | undefined }>
@@ -63,6 +66,7 @@ export const {
   setSelectedContractIndex,
   setSelectedFunctionIndex,
   setInputFields,
+  setInitialState,
 } = callNodeSlice.actions;
 
 export default callNodeSlice.reducer;

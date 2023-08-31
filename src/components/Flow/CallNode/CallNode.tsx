@@ -110,14 +110,14 @@ export function CallNode({ data }: { data: { text: string } }) {
   const contractFunctions = useMemo(() => {
     if (!selectedChainId) return [];
     if (!selectedContractIndex) return [];
-    return contractData[selectedChainId][selectedContractIndex].contractABI.filter(
-      (func) => func.type === "function"
-    );
+    return contractData[selectedChainId][
+      selectedContractIndex
+    ].contractABI.filter((func) => func.type === "function");
   }, [selectedChainId, selectedContractIndex]);
 
   useEffect(() => {
     handleDisptachState();
-  }, [selectedFunctionIndex, inputFields, , handleDisptachState]);
+  }, [selectedFunctionIndex, inputFields, handleDisptachState]);
 
   return (
     <div style={{ position: "relative" }}>
@@ -173,13 +173,12 @@ export function CallNode({ data }: { data: { text: string } }) {
             style={{ width: "100%", marginTop: "7px" }}
             options={[
               ...(contractData[selectedChainId][selectedContractIndex]
-                ? contractFunctions
-                    .map((func, i) => {
-                      return {
-                        value: i,
-                        label: func.name,
-                      };
-                    })
+                ? contractFunctions.map((func, i) => {
+                    return {
+                      value: i,
+                      label: func.name,
+                    };
+                  })
                 : []),
             ]}
           />
@@ -189,16 +188,18 @@ export function CallNode({ data }: { data: { text: string } }) {
         selectedFunctionIndex !== undefined ? (
           <div style={{ marginTop: "7px" }}>
             {contractData[selectedChainId][selectedContractIndex]
-              ? contractFunctions[selectedFunctionIndex].inputs.map((input, i) => {
-                  return (
-                    <Input
-                      key={i}
-                      value={inputFields[i] ? inputFields[i].value : ""}
-                      onChange={(event) => handleInputChange(i, event)}
-                      placeholder={`${input.name} (${input.type})`}
-                    />
-                  );
-                })
+              ? contractFunctions[selectedFunctionIndex].inputs.map(
+                  (input, i) => {
+                    return (
+                      <Input
+                        key={i}
+                        value={inputFields[i] ? inputFields[i].value : ""}
+                        onChange={(event) => handleInputChange(i, event)}
+                        placeholder={`${input.name} (${input.type})`}
+                      />
+                    );
+                  }
+                )
               : null}
           </div>
         ) : null}
